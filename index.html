@@ -1,45 +1,264 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Editable Table with Search</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Editable Table with Search and Dynamic Car Name Dropdown</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Add media query for smaller screens like mobile devices */
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Editable Table with Search</h1>
-    
-    <!-- Search Input -->
-    <input type="text" id="search" placeholder="Search">
-    
-    <button id="addRow">Add Row</button>
+    <div class="container">
+        <h1>Editable Table with Search and Dynamic Car Name Dropdown</h1>
 
-    <!-- Separate input fields for name and age -->
-    <input type="text" id="newName" placeholder="Name">
-    <input type="text" id="newAge" placeholder="Age">
-
-    
-    <!-- Table -->
-    <table id="table">
-        <!-- Table Header -->
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Age</th>
-            </tr>
-        </thead>
+        <!-- Search Input -->
+        <input type="text" id="search" placeholder="Search">
         
-        <!-- Table Body (Editable) -->
-        <tbody>
-            <tr>
-                <td contenteditable="true">John</td>
-                <td contenteditable="true">30</td>
-            </tr>
-            <tr>
-                <td contenteditable="true">Jane</td>
-                <td contenteditable="true">25</td>
-            </tr>
-        </tbody>
-    </table>
+        <!-- Dynamic Car Name Dropdown -->
+        <select id="carNameDropdown">
+            <!-- Add the car names here dynamically -->
+        </select>
+        <input type="text" id="newCarName" placeholder="New Car Name">
+        <button id="addCarName">Add Car Name</button>
 
-    <script src="script.js"></script>
+        <!-- Table -->
+        <table id="table">
+            <!-- Table Header -->
+            <thead>
+                <tr>
+                    <th>Car Name</th>
+                    <th>Car Type</th>
+                    <th>Part Name</th>
+                    <th>Price</th>
+                    <th>Commercial Price</th>
+                </tr>
+            </thead>
+            
+            <!-- Table Body (Editable) -->
+            <tbody>
+            </tbody>
+        </table>
+
+        <!-- Add Row Fields -->
+        <select id="newRowCarName">
+            <!-- Add the new car names here dynamically -->
+        </select>
+        <input type="text" id="newPartName" placeholder="Part Name">
+        <input type="text" id "newPrice" placeholder="Price">
+        <input type="text" id "newCommercialPrice" placeholder="Commercial Price">
+        <button id="addRow">Add Row</button>
+        
+        <!-- Clear Table Button -->
+        <button id="clearTable">Clear Table</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('search');
+            const table = document.getElementById('table');
+            const newRowCarName = document.getElementById('newRowCarName');
+            const newPartName = document.getElementById('newPartName');
+            const newPrice = document.getElementById('newPrice');
+            const newCommercialPrice = document.getElementById('newCommercialPrice');
+            const addRowButton = document.getElementById('addRow');
+            const carNameDropdown = document.getElementById('carNameDropdown');
+            const newCarNameInput = document.getElementById('newCarName');
+            const addCarNameButton = document.getElementById('addCarName');
+            const clearTableButton = document.getElementById('clearTable');
+
+            // Function to save the car names to local storage
+            function saveCarNames(carNames) {
+                localStorage.setItem('carNames', JSON.stringify(carNames));
+            }
+
+            // Function to load the car names from local storage
+            function loadCarNames() {
+                const savedCarNames = localStorage.getItem('carNames');
+                if (savedCarNames) {
+                    const carNames = JSON.parse(savedCarNames);
+                    carNames.forEach(carName => {
+                        addCarName(carName);
+                    });
+                }
+            }
+
+            // Function to save the table data to local storage
+            function saveTableData() {
+                const data = [];
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    data.push({
+                        carName: cells[0].innerText,
+                        carType: cells[1].innerText,
+                        partName: cells[2].innerText,
+                        price: cells[3].innerText,
+                        commercialPrice: cells[4].innerText
+                    });
+                });
+                localStorage.setItem('tableData', JSON.stringify(data));
+            }
+
+            // Function to load the table data from local storage
+            function loadTableData() {
+                const savedData = localStorage.getItem('tableData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    data.forEach(item => {
+                        addTableRow(item);
+                    });
+                }
+            }
+
+            // Function to add a new car name to the dropdown and "Add Row Fields"
+            function addCarName(newCarName) {
+                const option = document.createElement('option');
+                option.value = newCarName;
+                option.innerText = newCarName;
+                carNameDropdown.appendChild(option);
+
+                const newRowOption = document.createElement('option');
+                newRowOption.value = newCarName;
+                newRowOption.innerText = newCarName;
+                newRowCarName.appendChild(newRowOption);
+            }
+
+            // Function to add a new row to the table
+            function addTableRow(data) {
+                const newRow = table.querySelector('tbody').insertRow();
+                newRow.insertCell().innerText = data.carName;
+                newRow.insertCell().innerText = data.carType;
+                newRow.insertCell().innerText = data.partName;
+                newRow.insertCell().innerText = data.price;
+                newRow.insertCell().innerText = data.commercialPrice;
+            }
+
+            // Load the car names and table data from local storage when the page loads
+            loadCarNames();
+            loadTableData();
+
+            // Event listener for the "Add Row" button
+            addRowButton.addEventListener('click', function () {
+                if (newPartName.value && newPrice.value && newCommercialPrice.value) {
+                    const selectedCarName = newRowCarName.value;
+                    const rowData = {
+                        carName: selectedCarName,
+                        carType: '',
+                        partName: newPartName.value,
+                        price: newPrice.value,
+                        commercialPrice: newCommercialPrice.value
+                    };
+
+                    addTableRow(rowData);
+
+                    // Clear the input fields after adding a new row
+                    newPartName.value = '';
+                    newPrice.value = '';
+                    newCommercialPrice.value = '';
+
+                    // Save the updated table data to local storage
+                    saveTableData();
+                }
+            });
+
+            // Event listener for the "Add Car Name" button
+            addCarNameButton.addEventListener('click', function () {
+                const newCarName = newCarNameInput.value;
+                if (newCarName) {
+                    addCarName(newCarName);
+                    newCarNameInput.value = ''; // Clear the input field after adding
+                    // Save the updated car names to local storage
+                    const carNames = Array.from(carNameDropdown.options).map(option => option.value);
+                    saveCarNames(carNames);
+                }
+            });
+
+            // Event listener for the Enter key in the car name input field
+            newCarNameInput.addEventListener('keyup', function (event) {
+                if (event.key === "Enter") {
+                    const newCarName = newCarNameInput.value;
+                    if (newCarName) {
+                        addCarName(newCarName);
+                        newCarNameInput.value = ''; // Clear the input field after adding
+                        // Save the updated car names to local storage
+                        const carNames = Array.from(carNameDropdown.options).map(option => option.value);
+                        saveCarNames(carNames);
+                    }
+                }
+            });
+
+            // Event listener for the search input
+            searchInput.addEventListener('input', function () {
+                const searchTerm = searchInput.value.toLowerCase();
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const rowData = row.innerText.toLowerCase();
+                    if (rowData.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // Event listener for clicking on a row to edit
+            table.addEventListener('click', function (event) {
+                const cell = event.target;
+                if (cell.tagName === 'TD' && cell.cellIndex > 0) {
+                    const input = document.createElement('input');
+                    input.value = cell.innerText;
+                    cell.innerText = '';
+                    cell.appendChild(input);
+                    input.focus();
+
+                    input.addEventListener('blur', () => {
+                        cell.innerText = input.value;
+                        saveTableData();
+                    });
+                }
+            });
+
+            // Event listener to clear the table
+            clearTableButton.addEventListener('click', function () {
+                // Clear the table rows
+                table.querySelector('tbody').innerHTML = '';
+
+                // Clear the saved data from local storage
+                localStorage.removeItem('tableData');
+            });
+        });
+    </script>
 </body>
 </html>
