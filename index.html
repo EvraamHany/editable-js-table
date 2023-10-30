@@ -127,10 +127,9 @@
                     const cells = row.querySelectorAll('td');
                     data.push({
                         carName: cells[0].innerText,
-                        carType: cells[1].innerText,
-                        partName: cells[2].innerText,
-                        price: cells[3].innerText,
-                        commercialPrice: cells[4].innerText
+                        partName: cells[1].innerText,
+                        price: cells[2].innerText,
+                        commercialPrice: cells[3].innerText
                     });
                 });
                 localStorage.setItem('tableData', JSON.stringify(data));
@@ -164,7 +163,6 @@
             function addTableRow(data) {
                 const newRow = table.querySelector('tbody').insertRow();
                 newRow.insertCell().innerText = data.carName;
-                newRow.insertCell().innerText = data.carType;
                 newRow.insertCell().innerText = data.partName;
                 newRow.insertCell().innerText = data.price;
                 newRow.insertCell().innerText = data.commercialPrice;
@@ -180,7 +178,6 @@
                     const selectedCarName = newRowCarName.value;
                     const rowData = {
                         carName: selectedCarName,
-                        carType: '',
                         partName: newPartName.value,
                         price: newPrice.value,
                         commercialPrice: newCommercialPrice.value
