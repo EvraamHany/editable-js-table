@@ -41,28 +41,42 @@
 </head>
 <body>
     <div class="container">
-        <h1>Editable Table with Search and Dynamic Car Name Dropdown</h1>
+        <h1>ورشه المهندس نبيل</h1>
 
         <!-- Search Input -->
         <input type="text" id="search" placeholder="Search">
         
+        <div class="container">
+
         <!-- Dynamic Car Name Dropdown -->
         <select id="carNameDropdown">
             <!-- Add the car names here dynamically -->
         </select>
         <input type="text" id="newCarName" placeholder="New Car Name">
-        <button id="addCarName">Add Car Name</button>
+        <button id="addCarName">اضافه نوع سياره</button>
+        </div>
+        <div class="container">
+            <select id="newRowCarName">
+                <!-- Add the new car names here dynamically -->
+            </select>
+            <input type="text" id="newPartName" placeholder="اسم القطعه">
+            <input type="text" id="newPrice" placeholder="السعر">
+            <input type="text" id="newCommercialPrice" placeholder="السعر التجاري">        
+            <button id="addRow">اضافه صنف</button>
+            
+            <!-- Clear Table Button -->
+            <button id="clearTable">مسح كل الاصناف</button>
+        </div>
 
         <!-- Table -->
         <table id="table">
             <!-- Table Header -->
             <thead>
                 <tr>
-                    <th>Car Name</th>
-                    <th>Car Type</th>
-                    <th>Part Name</th>
-                    <th>Price</th>
-                    <th>Commercial Price</th>
+                    <th>نوع السياره</th>
+                    <th> اسم القطعه</th>
+                    <th>السعر</th>
+                    <th>السعر التجاري</th>
                 </tr>
             </thead>
             
@@ -72,16 +86,7 @@
         </table>
 
         <!-- Add Row Fields -->
-        <select id="newRowCarName">
-            <!-- Add the new car names here dynamically -->
-        </select>
-        <input type="text" id="newPartName" placeholder="Part Name">
-        <input type="text" id "newPrice" placeholder="Price">
-        <input type="text" id "newCommercialPrice" placeholder="Commercial Price">
-        <button id="addRow">Add Row</button>
-        
-        <!-- Clear Table Button -->
-        <button id="clearTable">Clear Table</button>
+      
     </div>
 
     <script>
